@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/douban-books",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/trending",
+      "schedule": "0 8 * * *"
+    }
+  ]
+}
