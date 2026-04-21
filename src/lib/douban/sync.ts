@@ -2,10 +2,16 @@ import { createClient } from '@supabase/supabase-js';
 import { Database } from '@/types/database';
 import * as cheerio from 'cheerio';
 
-const supabaseAdmin = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let supabaseAdminClient: ReturnType<typeof createClient<Database>> | null = null;
+function getSupabaseAdmin() {
+  if (supabaseAdminClient) return supabaseAdminClient;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url) throw new Error('NEXT_PUBLIC_SUPABASE_URL is required');
+  if (!key) throw new Error('SUPABASE_SERVICE_ROLE_KEY is required');
+  supabaseAdminClient = createClient<Database>(url, key);
+  return supabaseAdminClient;
+}
 
 export interface DoubanBook {
   douban_id: string;
@@ -205,6 +211,7 @@ export async function fetchDoubanTop250(start: number): Promise<DoubanBook[]> {
 }
 
 export async function upsertBooks(books: DoubanBook[]): Promise<void> {
+  const supabaseAdmin = getSupabaseAdmin();
   const BATCH_SIZE = 20;
   for (let i = 0; i < books.length; i += BATCH_SIZE) {
     const batch = books.slice(i, i + BATCH_SIZE);
@@ -233,6 +240,7 @@ export async function upsertBooks(books: DoubanBook[]): Promise<void> {
 }
 
 async function enrichBooksDetails(doubanIds: string[]) {
+  const supabaseAdmin = getSupabaseAdmin();
   const MAX_DETAILS = Math.min(doubanIds.length, 30);
   for (let i = 0; i < MAX_DETAILS; i++) {
     const id = doubanIds[i];
@@ -252,6 +260,7 @@ async function enrichBooksDetails(doubanIds: string[]) {
 }
 
 export async function syncDoubanBooks(): Promise<SyncResult> {
+  const supabaseAdmin = getSupabaseAdmin();
   const result: SyncResult = { synced: 0, failed: 0, errors: [] };
   const allBooks: DoubanBook[] = [];
 
