@@ -7,6 +7,7 @@ import { BookCard } from '@/components/books/BookCard';
 import { pickPersonaGreeting } from '@/lib/persona-greetings';
 
 export function ChatRecommend({
+  isLoggedIn,
   personaName,
   personaType,
   lastBookTitle,
@@ -14,6 +15,7 @@ export function ChatRecommend({
   onExpand,
   prefillText,
 }: {
+  isLoggedIn: boolean;
   personaName?: string | null;
   personaType?: string | null;
   lastBookTitle?: string | null;
@@ -92,6 +94,23 @@ export function ChatRecommend({
   }, [prefillText]);
 
   const disabled = status !== 'ready';
+
+  if (!isLoggedIn) {
+    return (
+      <div className="rounded-2xl border border-brand-parchment bg-white p-6 text-center space-y-3">
+        <div className="text-brand-navy font-semibold">登录后开启对话寻书</div>
+        <div className="text-sm text-brand-muted font-songti leading-relaxed">
+          你的对话记录与书单会被保存，书境才能越聊越懂你。
+        </div>
+        <a
+          href="/login?next=/"
+          className="inline-flex items-center justify-center h-10 px-4 rounded-xl bg-brand-blue text-white font-medium hover:bg-brand-navy transition-colors"
+        >
+          去登录
+        </a>
+      </div>
+    );
+  }
 
   if (collapsed) {
     return (

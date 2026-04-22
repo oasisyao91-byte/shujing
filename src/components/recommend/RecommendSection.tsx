@@ -7,10 +7,12 @@ import { PreciseSearch } from '@/components/recommend/PreciseSearch';
 import { useScrollReveal } from '@/lib/useScrollReveal';
 
 export function RecommendSection({
+  isLoggedIn,
   personaName,
   personaType,
   lastBookTitle,
 }: {
+  isLoggedIn: boolean;
   personaName?: string | null;
   personaType?: string | null;
   lastBookTitle?: string | null;
@@ -83,6 +85,7 @@ export function RecommendSection({
         <div className="p-4 md:p-6">
           <Tabs.Content value="chat" className="outline-none">
             <ChatRecommend
+              isLoggedIn={isLoggedIn}
               personaName={personaName}
               personaType={personaType}
               lastBookTitle={lastBookTitle}

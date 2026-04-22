@@ -163,7 +163,7 @@ export function HeroSection({
                     测试你的阅读性格，获取专属推荐
                   </span>
                   <a
-                    href="/?test=1"
+                    href="/login?next=/?test=1"
                     className="inline-flex items-center justify-center h-10 px-4 rounded-xl bg-brand-blue text-white font-medium hover:bg-brand-navy transition-colors"
                   >
                     去测试

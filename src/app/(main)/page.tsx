@@ -47,6 +47,7 @@ export default async function HomePage() {
 
       <div className="container space-y-10 -mt-2 md:-mt-4">
         <RecommendSection
+          isLoggedIn={!!user}
           personaName={userProfile?.persona_name}
           personaType={userProfile?.persona_type}
           lastBookTitle={lastBookTitle}
