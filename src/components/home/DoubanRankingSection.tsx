@@ -16,7 +16,13 @@ export async function DoubanRankingSection() {
   }
 
   const typedBooks = books as Book[];
-  const lastSync = typedBooks[0]?.synced_at ? new Date(typedBooks[0].synced_at).toLocaleDateString('zh-CN') : '最近';
+  const { data: latest } = await (supabase as any)
+    .from('books')
+    .select('synced_at')
+    .order('synced_at', { ascending: false, nullsFirst: false })
+    .limit(1)
+    .maybeSingle();
+  const lastSync = latest?.synced_at ? new Date(latest.synced_at).toLocaleDateString('zh-CN') : '最近';
 
   return <DoubanRankingSectionClient books={typedBooks} lastSync={lastSync} showDevLink={false} />;
 }
